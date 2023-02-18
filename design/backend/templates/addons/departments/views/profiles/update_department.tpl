@@ -66,6 +66,22 @@
                     placement="right"}
                 </div>
             </div>
+
+            <div class="control-group">
+                <label class="control-label">{__("director")}</label>
+                <div class="controls">
+                    {include file="addons/departments/views/profiles/components/picker/picker_admins.tpl"
+                    but_text=__("add_director")
+                    data_id="return_users"
+                    but_meta="btn"
+                    input_name="department_data[director_id]"
+                    item_ids=$department_data.director_id
+                    placement="right"
+                    display="radio"
+                    view_mode="single_button"
+                    user_info=$u_info}
+                </div>
+            </div>
             <!--content_general--></div>
 
         {capture name="buttons"}

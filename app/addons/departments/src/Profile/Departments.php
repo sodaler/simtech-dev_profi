@@ -153,4 +153,61 @@ class Departments
 
         return array($departments, $params);
     }
+
+    /**
+     * Get departments info by id
+     *
+     * @param $department_id
+     * @return array
+     */
+    public function getById($department_id)
+    {
+        $department = [];
+        if ($department_id) {
+            list($departments) = $this->getList([
+                'department_id' => $department_id,
+                'items_per_page' => 1,
+
+            ]);
+            if ($departments) {
+                $department = reset($departments);
+            }
+        }
+        return $department;
+    }
+
+    /**
+     * Update/Insert department
+     *
+     * @param $data
+     * @param $department_id
+     * @return int
+     */
+    public function upsert($data, $department_id = 0)
+    {
+        if (isset($data['timestamp'])) {
+            $data['timestamp'] = fn_parse_date($data['timestamp']);
+        }
+
+        if ($department_id) {
+            $this->db->query("UPDATE ?:departments SET ?u WHERE department_id = ?i", $data, $department_id);
+            $this->db->query("UPDATE ?:department_descriptions SET ?u WHERE department_id = ?i AND lang_code = ?s", $data, $department_id, $this->lang_code);
+
+        } else {
+            $department_id = $data['department_id'] = $this->db->replaceInto('departments', $data);
+
+            foreach (Languages::getAll() as $data['lang_code'] => $v) {
+                $this->db->replaceInto('department_descriptions', $data);
+            }
+        }
+        if ($department_id) {
+            fn_attach_image_pairs('department', 'department', $department_id, $lang_code);
+        }
+
+        if (empty($data['users'])) {
+            $data['users'] = '';
+        }
+
+        return $department_id;
+    }
 }

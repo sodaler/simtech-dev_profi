@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<addon scheme="4.0">
+    <id>departments</id>
+    <version>4.16.1.0</version>
+    <priority>100</priority>
+    <position>10</position>
+    <status>active</status>
+    <default_language>en</default_language>
+    <has-icon>Y</has-icon>
+
+    <autoload>
+        <psr4 prefix="Tygh\Addons\Departments\">src</psr4>
+    </autoload>
+    <bootstrap>\Tygh\Addons\Departments\Bootstrap</bootstrap>
+    <installer>\Tygh\Addons\Departments\Installer</installer>
+
+    <queries>
+        <item for="install">DROP TABLE IF EXISTS ?:departments;</item>
+        <item for="install">DROP TABLE IF EXISTS ?:department_descriptions;</item>
+        <item for="install">
+            CREATE TABLE `?:departments` (
+            `department_id` INT(11) unsigned NOT NULL auto_increment,
+            `status` varchar(1) NOT NULL default 'A',
+            `timestamp` INT(11) unsigned NOT NULL default '0',
+            `upd_timestamp` INT(11) unsigned NOT NULL default '0',
+            `director_id` INT(11) unsigned NOT NULL default '0',
+            `users` TEXT default NULL,
+            KEY(`director_id`),
+            PRIMARY KEY (`department_id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+        </item>
+        <item for="install">
+            CREATE TABLE `?:department_descriptions` (
+            `department_id` INT(11) unsigned NOT NULL default '0',
+            `lang_code` char(2) NOT NULL default '',
+            `department` varchar(255) NOT NULL default '',
+            `description` text null,
+            PRIMARY KEY (`department_id`, `lang_code`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+        </item>
+        <item for="uninstall">DROP TABLE IF EXISTS `?:departments`</item>
+        <item for="uninstall">DROP TABLE IF EXISTS `?:department_descriptions`</item>
+    </queries>
+</addon>

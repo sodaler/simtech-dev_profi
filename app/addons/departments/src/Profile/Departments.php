@@ -210,4 +210,21 @@ class Departments
 
         return $department_id;
     }
+
+    /**
+     * Delete department
+     *
+     * @param $department_id
+     * @return bool
+     */
+    public function delete($department_id)
+    {
+        $result = false;
+        if ($department_id) {
+            $result = $this->db->query('DELETE FROM ?:departments WHERE department_id = ?i', $department_id);
+            $this->db->query('DELETE FROM ?:department_descriptions WHERE department_id = ?i', $department_id);
+        }
+
+        return $result;
+    }
 }

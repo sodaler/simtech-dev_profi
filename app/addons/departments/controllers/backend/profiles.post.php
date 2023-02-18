@@ -52,6 +52,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         return [CONTROLLER_STATUS_OK, 'profiles.manage_departments'];
+    } elseif ($mode == 'delete_department') {
+        $department_id = !empty($_REQUEST['department_id']) ? $_REQUEST['department_id'] : 0;
+        $profile_departments->delete($department_id);
+
+        return [CONTROLLER_STATUS_OK, 'profiles.manage_departments'];
+    } elseif ($mode == 'delete_departments') {
+        if (!empty($_REQUEST['departments_ids'])) {
+            foreach ($_REQUEST['departments_ids'] as $department_id) {
+                $profile_departments->delete($department_id);
+            }
+        }
+        return [CONTROLLER_STATUS_OK, 'profiles.manage_departments'];
     }
 
     return [CONTROLLER_STATUS_OK, 'profiles.' . $suffix];

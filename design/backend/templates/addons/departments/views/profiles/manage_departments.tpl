@@ -133,4 +133,8 @@
 {$select_languages = true}
 {/hook}
 
+{capture name="sidebar"}
+    {include file="addons/departments/views/profiles/components/departments_search_form.tpl" dispatch="profiles.manage_departments"}
+{/capture}
+
 {include file="common/mainbox.tpl" title=$page_title content=$smarty.capture.mainbox adv_buttons=$smarty.capture.adv_buttons buttons=$smarty.capture.buttons select_languages=$select_languages sidebar=$smarty.capture.sidebar}

@@ -12,37 +12,26 @@
  * "copyright.txt" FILE PROVIDED WITH THIS DISTRIBUTION PACKAGE.            *
  ****************************************************************************/
 
-namespace Tygh\Addons\Departments;
+use Tygh\Registry;
+use Tygh\Addons\Departments\ServiceProvider;
 
-use Tygh\Core\ApplicationInterface;
-use Tygh\Core\BootstrapInterface;
-use Tygh\Core\HookHandlerProviderInterface;
+$profile_departments = ServiceProvider::getProfileDepartments();
 
-/**
- * This class describes instructions for loading the departments add-on
- *
- * @package Tygh\Addons\Departments
- */
-class Bootstrap implements BootstrapInterface, HookHandlerProviderInterface
-{
-    /**
-     * @inheritDoc
-     */
-    public function boot(ApplicationInterface $app)
-    {
-        $app->register(new ServiceProvider());
-    }
+if ($mode == 'manage_departments') {
+    $image_width = Registry::get('settings.Thumbnails.product_admin_mini_icon_width');
+    $image_height = Registry::get('settings.Thumbnails.product_admin_mini_icon_height');
 
-    /**
-     * @inheritDoc
-     */
-    public function getHookHandlerMap()
-    {
-        return [
-            'get_departments' => [
-                'addons.departments.hook_handlers.departments',
-                'onGetDepartments'
-            ],
-        ];
-    }
+    $image_width = $image_width ?: $image_height;
+    $image_height = $image_height ?: $image_width;
+
+    list($departments, $search) = $profile_departments->getList(array_merge([
+        'items_per_page' => Registry::get('settings.Appearance.admin_elements_per_page')
+    ], $_REQUEST));
+
+    Tygh::$app['view']->assign([
+        'departments' => $departments,
+        'image_width' => $image_width,
+        'image_height' => $image_height,
+        'search' => $search,
+    ]);
 }

@@ -12,37 +12,12 @@
  * "copyright.txt" FILE PROVIDED WITH THIS DISTRIBUTION PACKAGE.            *
  ****************************************************************************/
 
-namespace Tygh\Addons\Departments;
+defined('BOOTSTRAP') or die('Access denied!');
 
-use Tygh\Core\ApplicationInterface;
-use Tygh\Core\BootstrapInterface;
-use Tygh\Core\HookHandlerProviderInterface;
+$schema['central']['customers']['items']['departments.departments'] = [
+    'href' => 'profiles.manage_departments',
+    'alt' => 'profiles.manage_departments',
+    'position' => 1000,
+];
 
-/**
- * This class describes instructions for loading the departments add-on
- *
- * @package Tygh\Addons\Departments
- */
-class Bootstrap implements BootstrapInterface, HookHandlerProviderInterface
-{
-    /**
-     * @inheritDoc
-     */
-    public function boot(ApplicationInterface $app)
-    {
-        $app->register(new ServiceProvider());
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getHookHandlerMap()
-    {
-        return [
-            'get_departments' => [
-                'addons.departments.hook_handlers.departments',
-                'onGetDepartments'
-            ],
-        ];
-    }
-}
+return $schema;

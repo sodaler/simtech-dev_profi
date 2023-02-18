@@ -12,42 +12,31 @@
  * "copyright.txt" FILE PROVIDED WITH THIS DISTRIBUTION PACKAGE.            *
  ****************************************************************************/
 
-namespace Tygh\Addons\Departments;
+namespace Tygh\Addons\Departments\HookHandlers;
 
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
-use Tygh\Addons\Departments\Profile\Departments;
-use Tygh\Addons\Departments\HookHandlers\DepartmentsHookHandler;
+use Tygh;
+use Tygh\Application;
 use Tygh\Registry;
-use Tygh\Tygh;
 
 /**
- * Class ServiceProvider is intended to register services and components of the "departments" add-on to the application
- * container.
+ * This class describes the hook handlers related to department management
  *
- * @package Tygh\Addons\Departments
+ * @package Tygh\Addons\Departments\HookHandlers
  */
-class ServiceProvider implements ServiceProviderInterface
+class DepartmentsHookHandler
 {
-    /**
-     * @inheritDoc
-     */
-    public function register(Container $app)
-    {
-        $app['addons.departments.profile.departments'] = function (Container $app) {
-            return new Departments($app, AREA, DESCR_SL);
-        };
+    protected $application;
 
-        $app['addons.departments.hook_handlers.departments'] = function (Container $app) {
-            return new DepartmentsHookHandler($app);
-        };
+    public function __construct(Application $application)
+    {
+        $this->application = $application;
     }
 
     /**
-     * @return Departments
+     * The "get_departments" hook handler.
      */
-    public static function getProfileDepartments()
+    public function onGetDepartments(&$params, &$fields, $sortings, &$condition, &$join, $sorting, &$group_by, $lang_code, $having)
     {
-        return Tygh::$app['addons.departments.profile.departments'];
+
     }
 }

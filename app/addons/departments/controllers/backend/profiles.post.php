@@ -103,3 +103,15 @@ if ($mode == 'add_department' || $mode == 'update_department') {
         'update_mode' => ($mode == 'update_department') ? $mode : '',
     ]);
 }
+
+if ($mode == 'picker_admins') {
+    $params = $_REQUEST;
+    $params['exclude_user_types'] = array('C', 'V');
+    $params['skip_view'] = 'Y';
+
+    list($users) = fn_get_users($params, $auth);
+    Tygh::$app['view']->assign('users', $users);
+
+    Tygh::$app['view']->display('addons/departments/views/profiles/components/picker/picker_admins_contents.tpl');
+    exit;
+}

@@ -69,15 +69,22 @@ class Departments
 
         Registry::registerCache(
             $cache_key,
-            ['departments', 'department_descriptions'],
+            ['departments', 'department_descriptions', 'total_items'],
+            Registry::cacheLevel('locale_auth'),
+            true
+        );
+
+        Registry::registerCache(
+            'total_items',
             Registry::cacheLevel('locale_auth'),
             true
         );
 
         $cache = Registry::get($cache_key);
-
+        $cache_total = Registry::get('total_items');
         if (!empty($cache)) {
             $departments = $cache;
+            $params['total_items'] = $cache_total;
         } else {
             $fields = array(
                 '?:departments.*',
@@ -148,7 +155,9 @@ class Departments
 
             if (!empty($departments)) {
                 Registry::set($cache_key, $departments);
+                Registry::set('total_items', $params['total_items']);
             }
+
         }
 
         return array($departments, $params);

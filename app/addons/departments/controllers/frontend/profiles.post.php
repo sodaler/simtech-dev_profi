@@ -29,8 +29,8 @@ if ($mode == 'departments') {
     $params['user_id'] = Tygh::$app['session']['auth']['user_id'];
 
     list($departments, $search) = $profile_departments->getList(array_merge([
-        'items_per_page' => Registry::get('settings.Appearance.admin_elements_per_page')
-    ], $_REQUEST));
+        'items_per_page' => Registry::get('settings.Appearance.products_per_page'),
+    ], $params));
 
     Tygh::$app['view']->assign([
         'departments' => $departments,
@@ -39,4 +39,36 @@ if ($mode == 'departments') {
     ]);
 
     fn_add_breadcrumb(__('departments'));
+} elseif ($mode == 'department') {
+    $department_data = [];
+    $department_id = !empty($_REQUEST['department_id']) ? $_REQUEST['department_id'] : 0;
+    $department_data = $profile_departments->getById($department_id);
+
+    if (empty($department_data)) {
+        return [CONTROLLER_STATUS_NO_PAGE];
+    }
+
+    $params = $_REQUEST;
+    $params['extend'] = ['description'];
+    $params['item_ids'] = !empty($department_data['employee_ids']) ? implode(',', $department_data['employee_ids']) : -1;
+    $params['sort_by'] = $department_data['users'];
+    $params['items_per_page'] = Registry::get('settings.Appearance.products_per_page');
+
+    $users = $department_data['users'] ? explode(',', $department_data['users']) : [];
+    $director = $department_data['director_id'] ? fn_get_user_short_info($department_data['director_id']) : -1;
+    $res_users = [];
+
+    list($res_users, $search) = fn_get_users($params, $auth, Registry::get('settings.Appearance.users_per_page'));
+    $search['total_items'] = count($users);
+    $res_users = fn_sort_by_ids($res_users, explode(',', $department_data['users']), 'user_id');
+
+    Tygh::$app['view']->assign([
+        'search' => $search,
+        'director' => $director,
+        'users' => $res_users,
+        'department_data' => $department_data
+    ]);
+
+    fn_add_breadcrumb(__('departments'), "profiles.departments");
+    fn_add_breadcrumb($department_data['department']);
 }

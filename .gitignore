@@ -10,6 +10,8 @@ var/*
 !var/resources
 !var/langs
 !var/conf
+!var/backups
+!var/additional
 !var/.htaccess
 !var/index.php
 !var/builds

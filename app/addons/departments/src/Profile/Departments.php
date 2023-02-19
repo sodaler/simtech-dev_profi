@@ -76,6 +76,7 @@ class Departments
 
         Registry::registerCache(
             'total_items',
+            'total_items',
             Registry::cacheLevel('locale_auth'),
             true
         );
